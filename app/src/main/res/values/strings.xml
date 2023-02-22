@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">s91 smarttv keyboard</string>
+    <string name="app_name">SmartTv Клавиатура</string>
     <string name="hello_world">Нажми старт, приложение скроется , но будет работать в фоне.</string>
 
 </resources>

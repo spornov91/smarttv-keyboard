@@ -2,28 +2,29 @@ package ru.spornov91.smarttvkeyboard;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
-import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.List;
-import java.util.Locale;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.View.OnKeyListener;
-import android.view.View;
 
 public class MainActivity extends Activity 
 {
-	//private static final String CHANNEL_ID = "CID";
+	private static final String CHANNEL_ID = "CID";
 	private static int pair[] = new int[2];
 	//actions[ACTION_LEFT] 
 	Intent intent;
@@ -41,6 +42,15 @@ public class MainActivity extends Activity
 		etlang =    findViewById(R.id.etlang);
 		etkeyname = findViewById(R.id.etkeyname);
 		etkeycode = findViewById(R.id.etkeycode);
+		
+		bstart_service = findViewById(R.id.bstart_service);
+		bstart_service.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					createNotificationChannel();
+					startService();
+				}
+			});
 
 		new Thread(new Runnable() { 
 				public void run()
@@ -200,5 +210,22 @@ public class MainActivity extends Activity
 				return super.onKeyUp(keyCode, event);
 		}
 	}
+	
+	private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+				CHANNEL_ID,
+				"smarttv-keyboard",
+				NotificationManager.IMPORTANCE_DEFAULT
+            );
 
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+	};
+
+	private void startService(){
+	    Intent serviceIntent = new Intent(this, MainService.class);
+	    startForegroundService(serviceIntent);
+	};
 };

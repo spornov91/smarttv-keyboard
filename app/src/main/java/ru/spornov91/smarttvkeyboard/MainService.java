@@ -18,8 +18,8 @@ public class MainService extends Service
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
-			.setContentTitle("Служба локера")
-			.setContentText("Волум замороженый")
+			.setContentTitle("SmartTvKeyboard")
+			.setContentText("ПК Клавиатура")
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setContentIntent(pendingIntent)
 			.build();
