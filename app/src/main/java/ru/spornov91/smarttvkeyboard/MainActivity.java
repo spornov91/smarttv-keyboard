@@ -16,6 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View.OnKeyListener;
+import android.view.View;
 
 public class MainActivity extends Activity 
 {
@@ -27,41 +31,93 @@ public class MainActivity extends Activity
 	TextView etkeyname;
 	TextView etkeycode;
 	Button bstart_service;
-	
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-		
+
 		etlang =    findViewById(R.id.etlang);
 		etkeyname = findViewById(R.id.etkeyname);
 		etkeycode = findViewById(R.id.etkeycode);
 
-    };
+		new Thread(new Runnable() { 
+				public void run()
+				{
+					Looper.prepare();
+					while (true)
+					{
+						try
+						{
+                            Log.d("2", "2");
+							new Handler(Looper.getMainLooper()).post(
+								new Runnable() {
+									@Override
+									public void run()
+									{
+										//getView().setOnKeyListener(
+										new OnKeyListener()
+										{
+											public boolean onKey(View v, int keyCode, KeyEvent event)
+											{
+												if (event.getAction() == KeyEvent.ACTION_DOWN)
+												{
+													Log.d("3", "3");
+													switch (keyCode)
+													{
+														case KeyEvent.KEYCODE_VOLUME_UP:
+															pair[0] = KeyEvent.KEYCODE_VOLUME_UP;
+															etkeyname.setText("+");
+															//etkeycode.setText("kc; " + keyCode);
+															Toast.makeText(getApplicationContext(), "+", Toast.LENGTH_SHORT).show();
+															return true;
+
+														default:
+															break;
+													};
+												};
+
+												return false;
+											};
+										};
+
+									}//run
+								}//runable
+							);//handler
+
+
+							Thread.sleep(1000);
+						}
+						catch (InterruptedException e)
+						{}
+					}
+				}
+			}).start();
+	};
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		etkeycode.setText(Integer.toString(keyCode));
 		Toast.makeText(getApplicationContext(), "" + keyCode, Toast.LENGTH_SHORT).show();
-		
+
 		switch (keyCode)
 		{
 			case KeyEvent.KEYCODE_META_LEFT:
 				pair[0] = KeyEvent.KEYCODE_META_LEFT;
 				return true;
-				
+
 			case KeyEvent.KEYCODE_CTRL_LEFT:
 				pair[0] = KeyEvent.KEYCODE_CTRL_LEFT;
 				return true;
-				
+
 			case KeyEvent.KEYCODE_ALT_LEFT:
 				pair[0] = KeyEvent.KEYCODE_ALT_LEFT;
 				etkeyname.setText("alt");
 				etkeycode.setText("kc; " + keyCode);
 				return true;
-				
+
 			case KeyEvent.KEYCODE_TAB:
 				if (pair[0] == KeyEvent.KEYCODE_ALT_LEFT)
 				{
@@ -75,52 +131,46 @@ public class MainActivity extends Activity
 				{
 					etkeyname.setText("ctrl+tab prev app");
 					etkeycode.setText("kc; " + keyCode);
-					
+
 					ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
 					List<ActivityManager.RecentTaskInfo> recentTasks = activityManager.getRecentTasks(10, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
 				    String packageName = recentTasks.get(1).baseIntent.getComponent().getPackageName();
-					
+
 					Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
-					startActivity( launchIntent );
+					startActivity(launchIntent);
 				}
 				return true;
-				
+
 			case KeyEvent.KEYCODE_SHIFT_LEFT:
 				if (pair[0] == KeyEvent.KEYCODE_ALT_LEFT)
 				{
-				etkeyname.setText("alt+shift");
-				etkeycode.setText("kc; " + keyCode + " alt+shift; " + KeyEvent.KEYCODE_ALT_LEFT + KeyEvent.KEYCODE_SHIFT_LEFT);
+					etkeyname.setText("alt+shift");
+					etkeycode.setText("kc; " + keyCode + " alt+shift; " + KeyEvent.KEYCODE_ALT_LEFT + KeyEvent.KEYCODE_SHIFT_LEFT);
 
-			    InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
-			    inputMethodManager.showInputMethodPicker();
+					InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+					inputMethodManager.showInputMethodPicker();
 				}
 				return true;
 
 			case KeyEvent.KEYCODE_1:
 				if (pair[0] == KeyEvent.KEYCODE_CTRL_LEFT)
 				{
-				etkeyname.setText("ctrl+1 chrome");
-				etkeycode.setText("kc; " + keyCode);
+					etkeyname.setText("ctrl+1 chrome");
+					etkeycode.setText("kc; " + keyCode);
 
-				String urlString = "googlechrome://navigate?url=http://google.com";
-				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.setPackage("com.android.chrome");
-				startActivity(intent);
+					String urlString = "googlechrome://navigate?url=http://google.com";
+					intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.setPackage("com.android.chrome");
+					startActivity(intent);
 				}
 				return true;
 
-//			case KeyEvent.KEYCODE_VOLUME_UP:
-//				pair[0] = KeyEvent.KEYCODE_VOLUME_UP;
-//				etkeyname.setText("+");
-//				etkeycode.setText("kc; " + keyCode);
-//				return true;
-				
 			default:
-			return super.onKeyDown(keyCode, event);
+				return super.onKeyDown(keyCode, event);
 		}
 
-		
+
 	}
 
 	@Override 
@@ -131,11 +181,11 @@ public class MainActivity extends Activity
 			case KeyEvent.KEYCODE_CTRL_LEFT:
 				pair[0] = 0;
 				return true;
-				
+
 			case KeyEvent.KEYCODE_ALT_LEFT:
 				pair[0] = 0;
 				return true;
-				
+
 			case KeyEvent.KEYCODE_META_LEFT:
 				if (pair[0] == KeyEvent.KEYCODE_META_LEFT)
 				{
@@ -147,8 +197,8 @@ public class MainActivity extends Activity
 				}
 				return true;
 			default:
-			return super.onKeyUp(keyCode, event);
+				return super.onKeyUp(keyCode, event);
 		}
 	}
-	
+
 };
