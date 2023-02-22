@@ -91,12 +91,8 @@ public class MainActivity extends Activity
 				etkeyname.setText("alt+shift");
 				etkeycode.setText("kc; " + keyCode + " alt+shift; " + KeyEvent.KEYCODE_ALT_LEFT + KeyEvent.KEYCODE_SHIFT_LEFT);
 
-				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-				InputMethodSubtype ims = imm.getCurrentInputMethodSubtype();
-			    String localeString = ims.getLocale();
-				Locale locale = new Locale(localeString);
-				String currentLanguage = locale.getDisplayLanguage();
-				etlang.setText(currentLanguage);
+			    InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+			    inputMethodManager.showInputMethodPicker();
 				}
 				return true;
 
