@@ -1,14 +1,14 @@
 package ru.spornov91.smarttvkeyboard;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.util.Log;
 import android.view.KeyEvent;
-import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Button;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
-import android.util.Log;
 
 public class MainActivity extends Activity 
 {
@@ -53,6 +52,10 @@ public class MainActivity extends Activity
 				pair[0] = KeyEvent.KEYCODE_META_LEFT;
 				return true;
 				
+			case KeyEvent.KEYCODE_CTRL_LEFT:
+				pair[0] = KeyEvent.KEYCODE_CTRL_LEFT;
+				return true;
+				
 			case KeyEvent.KEYCODE_ALT_LEFT:
 				pair[0] = KeyEvent.KEYCODE_ALT_LEFT;
 				etkeyname.setText("alt");
@@ -68,7 +71,18 @@ public class MainActivity extends Activity
 					intent.setComponent(new ComponentName("com.android.systemui", "com.android.systemui.recent.RecentsActivity"));
 					startActivity(intent);
 				}
-				
+				if (pair[0] == KeyEvent.KEYCODE_CTRL_LEFT)
+				{
+					etkeyname.setText("ctrl+tab prev app");
+					etkeycode.setText("kc; " + keyCode);
+					
+					ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+					List<ActivityManager.RecentTaskInfo> recentTasks = activityManager.getRecentTasks(10, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
+				    String packageName = recentTasks.get(1).baseIntent.getComponent().getPackageName();
+					
+					Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+					startActivity( launchIntent );
+				}
 				return true;
 				
 			case KeyEvent.KEYCODE_SHIFT_LEFT:
@@ -87,31 +101,23 @@ public class MainActivity extends Activity
 				return true;
 
 			case KeyEvent.KEYCODE_1:
-				etkeyname.setText("chrome");
-				etkeycode.setText("kc; " + keyCode + " 1;");
+				if (pair[0] == KeyEvent.KEYCODE_CTRL_LEFT)
+				{
+				etkeyname.setText("ctrl+1 chrome");
+				etkeycode.setText("kc; " + keyCode);
 
 				String urlString = "googlechrome://navigate?url=http://google.com";
 				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setPackage("com.android.chrome");
 				startActivity(intent);
+				}
 				return true;
 
 //			case KeyEvent.KEYCODE_VOLUME_UP:
 //				pair[0] = KeyEvent.KEYCODE_VOLUME_UP;
 //				etkeyname.setText("+");
 //				etkeycode.setText("kc; " + keyCode);
-//				return true;
-//
-//			case KeyEvent.KEYCODE_VOLUME_DOWN:
-//				if (pair[0] == KeyEvent.KEYCODE_VOLUME_UP)
-//				{
-//					
-//					
-//					pair[0] = KeyEvent.KEYCODE_VOLUME_DOWN;
-//					etkeyname.setText("ralt+rshift");
-//					etkeycode.setText("kc; " + keyCode);
-//				}
 //				return true;
 				
 			default:
@@ -126,12 +132,9 @@ public class MainActivity extends Activity
 	{
 		switch (keyCode)
 		{
-//			case KeyEvent.KEYCODE_VOLUME_UP:
-//				if (pair[0] == KeyEvent.KEYCODE_VOLUME_UP)
-//				{
-//					pair[0] = 0;
-//				}
-//				return true;
+			case KeyEvent.KEYCODE_CTRL_LEFT:
+				pair[0] = 0;
+				return true;
 				
 			case KeyEvent.KEYCODE_ALT_LEFT:
 				pair[0] = 0;
