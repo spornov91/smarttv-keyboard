@@ -14,19 +14,25 @@
         android:theme="@style/AppTheme"
 		android:resizeableActivity = "true">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity1"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<service 
+		<!--<service 
 			android:enabled="true"
 			android:exported="true"
 			android:label="@string/app_name"
-			android:name=".MainService"
-        />
+			android:name=".ServiceNotify"
+        />-->
+		<service android:name=".ServiceIME" android:permission="android.permission.BIND_INPUT_METHOD">
+			<intent-filter>
+				<action android:name="android.view.InputMethod" />
+			</intent-filter>
+			<meta-data android:name="android.view.im" android:resource="@xml/ime_method" />
+		</service>
     </application>
 
 </manifest>

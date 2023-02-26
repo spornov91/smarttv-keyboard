@@ -3,5 +3,6 @@
 
     <string name="app_name">SmartTv Клавиатура</string>
     <string name="hello_world">Нажми старт, приложение скроется , но будет работать в фоне.</string>
-
+	<string name="subtype_en_US">English (US)</string>
+	<string name="subtype_ru_RU">Русский (RU)</string>
 </resources>

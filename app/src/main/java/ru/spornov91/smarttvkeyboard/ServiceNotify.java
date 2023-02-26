@@ -4,7 +4,7 @@ import android.app.*;
 import android.content.*;
 import android.os.*;
 
-public class MainService extends Service
+public class ServiceNotify extends Service
  {
 	private static final String CHANNEL_ID = "CID";
     @Override
@@ -15,7 +15,7 @@ public class MainService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
     
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, Activity1.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
 			.setContentTitle("SmartTvKeyboard")
