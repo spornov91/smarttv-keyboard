@@ -35,8 +35,8 @@ extends InputMethodService
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		Log.d(TAG, Integer.toString(keyCode));
-		Toast.makeText(getApplicationContext(), Integer.toString(keyCode), Toast.LENGTH_SHORT).show();
+		//Log.d(TAG, Integer.toString(keyCode));
+		//Toast.makeText(getApplicationContext(), Integer.toString(keyCode), Toast.LENGTH_SHORT).show();
         switch (keyCode)
 		{
 			case KeyEvent.KEYCODE_META_LEFT:
@@ -61,7 +61,9 @@ extends InputMethodService
 					{
 						intent = new Intent("com.android.systemui.recent.action.TOGGLE_RECENTS");
 						intent.setComponent(new ComponentName("com.android.systemui", "com.android.internal.policy.impl.RecentApplicationsDialog"));
-						startActivity(intent);
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						this.startActivity(intent);
 					}
 					if (
 						(Build.VERSION.SDK_INT >= 4.2)
@@ -70,7 +72,9 @@ extends InputMethodService
 					{
 						intent = new Intent("com.android.systemui.recent.action.TOGGLE_RECENTS");
 						intent.setComponent(new ComponentName("com.android.systemui", "com.android.systemui.recent.RecentsActivity"));
-						startActivity(intent);
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						this.startActivity(intent);
 					}
 					if (
 						(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -82,7 +86,7 @@ extends InputMethodService
 						intent.setAction(Intent.ACTION_VIEW); 
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						startActivity(intent);
+						this.startActivity(intent);
 					}
 
 				}
@@ -98,7 +102,9 @@ extends InputMethodService
 						String packageName = recentTasks.get(1).baseIntent.getComponent().getPackageName();
 
 						Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
-						startActivity(launchIntent);
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						this.startActivity(launchIntent);
 					}
 				}
 				return true;
@@ -122,12 +128,10 @@ extends InputMethodService
 				if (pair[0] == KeyEvent.KEYCODE_CTRL_LEFT)
 				{
 					//"ctrl+1 chrome"
-
-					String urlString = "googlechrome://navigate?url=http://google.com";
-					intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+					intent = new Intent(Intent.ACTION_VIEW);
 					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.setPackage("com.android.chrome");
-					startActivity(intent);
+					this.startActivity(intent);
 				}
 				return true;
 				
@@ -174,7 +178,7 @@ extends InputMethodService
 						intent = new Intent(Intent.ACTION_MAIN);
 						intent.addCategory(Intent.CATEGORY_HOME);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(intent);
+						this.startActivity(intent);
 					}
 				}
 				return true;
